@@ -33,10 +33,12 @@ class admin_plugin_metaeditor_editor extends DokuWiki_Admin_Plugin {
         
     }
     
+    /*
     function recurseTree($var){
       //$out = '<li>';
       foreach($var as $k => $v){
-        $out .= '<li>'.$k;
+        if($k == 'id')
+          $out .= '<li>'.$v;
         if(is_array($v)){
           $out .= '<ul>'.$this->recurseTree($v).'</ul>';
         }
@@ -44,17 +46,51 @@ class admin_plugin_metaeditor_editor extends DokuWiki_Admin_Plugin {
       }  
       return $out; //.'</li>';
     }
-
+    */
+    
+    function recurseTree($ns) {
+        global $conf;
+        $out = '';
+        $list = array();
+        $opts = array(
+            'depth' => 1,
+            'listfiles' => true,
+            'listdirs'  => true,
+            'pagesonly' => true,
+            'firsthead' => true,
+            'sneakyacl' => $conf['sneaky_index'],
+        );
+        search($list,$conf['datadir'],'search_universal',$opts,$ns);
+        foreach($list as $item)
+        {
+          if($item['type'] == 'f' || $item['type'] == 'd')
+          {
+            $out .= '<li>'.$item['id'];
+            if($item['type'] == 'd')
+              $out .= '<ul>'.$this->recurseTree(str_replace(':', '/', $item['id'])).'</ul>';
+            $out .= '</li>';
+          }
+        }
+        return $out;
+    }
 
     function html() {
-        $cache = false;
-        $id = 'start';
-        $meta = p_read_metadata($id, $cache);
-        echo '<div id="metaTree">';
-        echo '<ul>'.$this->recurseTree($meta).'</ul>';
-        echo '</div>';
-        echo '<div id="event_result"></div>';
-        print_r($meta);
+
+        //$cache = false;
+        //$id = 'start';
+        //$meta = p_read_metadata($id, $cache);
+
+        print_r($list);
+        echo '<table>';
+        echo '<tr>';
+        echo '<td><div id="fileTree">';
+        echo '<ul>'.$this->recurseTree('/').'</ul>';
+        echo '</div></td>';
+        echo '<td><div id="metaTree"></div></td>';
+        echo '<td><div id="event_result"></div></td>';
+        //echo '<ul>'.$this->recurseTree($meta).'</ul>';
+        //echo '</div>';
+        //print_r($meta);
     }
 
 }
