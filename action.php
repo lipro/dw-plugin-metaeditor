@@ -52,7 +52,12 @@ class action_plugin_metaeditor extends DokuWiki_Action_Plugin {
         $newval = $key['newval'];
         $key = $key['key'];
         $data = $this->setMetaValueForPage($pageid, $key, $oldval, $newval);
-        breka;
+        break;
+      case 'deleteMetaValue':
+        $json = true;
+        $key = $key['key'];
+        $data = $this->deleteMetaValueForPage($pageid, $key);
+        break;
     
     }
     
@@ -95,6 +100,24 @@ class action_plugin_metaeditor extends DokuWiki_Action_Plugin {
       return "Key has changed in the meantime, expected $oldval but got $m. Nothing was saved!";
     }
   
+  }
+  
+  function deleteMetaValueForPage($pageid, $key)
+  {
+    $cache = false;
+    $meta = p_read_metadata($pageid, $cache);
+    $m = &$meta;
+    for($i=0;$i<count($key);$i++)
+    {
+      if($i == count($key)-1)
+        unset($m[$key[$i]]);
+      else
+        $m = &$m[$key[$i]];
+    }
+    if(p_save_metadata($pageid, $meta))
+      return array(true, "Successfully deleted key: $key");
+    else
+      return array(false, "Error deleting key: $key");
   }
   
   function parseMetaTree($meta)
