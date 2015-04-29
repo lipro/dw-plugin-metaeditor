@@ -30,41 +30,46 @@ class action_plugin_metaeditor extends DokuWiki_Action_Plugin {
     $event->preventDefault();
     $event->stopPropagation();
     global $INPUT;
-    //global $auth; // FIXME: Add auth check for admin user here
     
     $action = trim($INPUT->post->str('q'));
     $pageid = trim($INPUT->post->str('r'));
-    $key = $INPUT->post->arr('k');
+    $opts = $INPUT->post->arr('opts');
     $data = array();
-    $json = false;
+    $useJson = true;
     
-    switch($action)
+    $perm = auth_quickaclcheck($pageid);
+    if($perm == AUTH_ADMIN)
     {
-      case 'getMeta':
-        $data = $this->getMetaForPage($pageid);
-        $json = true;
-        break;
-      case 'getMetaValue':
-        $data = $this->getMetaValueForPage($pageid, $key);
-        break;
-      case 'setMetaValue':
-        $oldval = $key['oldval'];
-        $newval = $key['newval'];
-        $key = $key['key'];
-        $data = $this->setMetaValueForPage($pageid, $key, $oldval, $newval);
-        break;
-      case 'deleteMetaValue':
-        $json = true;
-        $key = $key['key'];
-        $data = $this->deleteMetaValueForPage($pageid, $key);
-        break;
-    
+        switch($action)
+        {
+          case 'getMeta':
+            $data = $this->getMetaForPage($pageid);
+            break;
+          case 'getMetaValue':
+            $useJson = false;
+            $data = $this->getMetaValueForPage($pageid, $opts['key']);
+            break;
+          case 'setMetaValue':
+            $data = $this->setMetaValueForPage($pageid, $opts['key'], $opts['oldval'], $opts['newval']);
+            break;
+          case 'deleteMetaValue':
+            $data = $this->deleteMetaValueForPage($pageid, $opts['key']);
+            break;
+          case 'createMetaArray':
+            $data = $this->createMetaArrayForPage($pageid, $opts['key'], $opts['newval']);
+            break;
+          case 'createMetaValue':
+            $data = $this->createMetaValueForPage($pageid, $opts['key'], $opts['newkey'], $opts['newval']);
+            break;
+        }
+    }
+    else
+    {
+      $data = array(false, "You are not an admin");
     }
     
-    //$data = $_SERVER['REMOTE_USER'];
     
-    
-    if($json)
+    if($useJson)
     {
       //json library of DokuWiki
       require_once DOKU_INC . 'inc/JSON.php';
@@ -80,6 +85,38 @@ class action_plugin_metaeditor extends DokuWiki_Action_Plugin {
     }
   }
   
+  function createMetaArrayForPage($pageid, $key, $newval)
+  {
+    $cache = false;
+    $meta = p_read_metadata($pageid, $cache);
+    $m = &$meta;
+    foreach($key as $k)
+    {
+      $m = &$m[$k];
+    }
+    $m[$newval] = array();
+    if(p_save_metadata($pageid, $meta))
+        return array(true, "Successfully saved: $newval");
+    else
+      return array(false, "Error saving value: $newval");  
+  }
+  
+  function createMetaValueForPage($pageid, $key, $newkey, $newval)
+  {
+    $cache = false;
+    $meta = p_read_metadata($pageid, $cache);
+    $m = &$meta;
+    foreach($key as $k)
+    {
+      $m = &$m[$k];
+    }
+    $m[$newkey] = $newval;
+    if(p_save_metadata($pageid, $meta))
+        return array(true, "Successfully saved: $newval");
+    else
+      return array(false, "Error saving value: $newval"); 
+  }
+  
   function setMetaValueForPage($pageid, $key, $oldval, $newval)
   {
     $cache = false;
@@ -91,13 +128,13 @@ class action_plugin_metaeditor extends DokuWiki_Action_Plugin {
     {
       $m = $newval;
       if(p_save_metadata($pageid, $meta))
-        return "Successfully saved: $newval";
+        return array(true, "Successfully saved: $newval");
       else
-        return "Error saving value: $newval";
+        return array(false, "Error saving value: $newval");
     }
     else
     {
-      return "Key has changed in the meantime, expected $oldval but got $m. Nothing was saved!";
+      return array(false, "Key has changed in the meantime, expected $oldval but got $m. Nothing was saved!");
     }
   
   }
@@ -115,9 +152,9 @@ class action_plugin_metaeditor extends DokuWiki_Action_Plugin {
         $m = &$m[$key[$i]];
     }
     if(p_save_metadata($pageid, $meta))
-      return array(true, "Successfully deleted key: $key");
+      return array(true, "Successfully deleted key: " . join(':', $key));
     else
-      return array(false, "Error deleting key: $key");
+      return array(false, "Error deleting key: " . join(':', $key));
   }
   
   function parseMetaTree($meta)
@@ -130,9 +167,13 @@ class action_plugin_metaeditor extends DokuWiki_Action_Plugin {
       if(is_array($v))
       {
         $a['children'] = $this->parseMetaTree($v);
+        $a['li_attr'] = array('data-type' => 'folder');
       }
       else
-      $a['icon'] = DOKU_URL."/lib/images/page.png";
+      {
+        $a['li_attr'] = array('data-type' => 'file');
+        $a['icon'] = DOKU_URL."/lib/images/page.png";
+      }
       $out[] = $a;
     }
     return $out;

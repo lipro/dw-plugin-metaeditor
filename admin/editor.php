@@ -25,7 +25,7 @@ class admin_plugin_metaeditor_editor extends DokuWiki_Admin_Plugin {
     function forAdminOnly() { return true; }
 
     function getMenuText($language) {
-        return "Simple Persistent Meta Data Editor";
+        return "Simple Meta Data Editor";
     }
 
     function handle() {
