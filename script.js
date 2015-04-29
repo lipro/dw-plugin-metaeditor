@@ -5,6 +5,28 @@ jQuery(function()
 
     var selectedPageId = null;
     var selectedNode = null;
+    var selectedNodeValue = null;
+    
+    jQuery('#event_save').click(function() {
+      var newVal = jQuery('#event_value').val()
+      jQuery.post(
+        DOKU_BASE + 'lib/exe/ajax.php',
+        {
+          call: 'plugin_metaeditor',
+          q: 'setMetaValue',
+          r: selectedPageId,
+          k: {
+            key : selectedNode,
+            oldval : selectedNodeValue,
+            newval : newVal
+          }        
+        },
+        function(data) {
+          alert(data);
+        }
+      );
+    
+    });
     
     jQuery('#metaTree').on('changed.jstree', function (e, data) {
       var i, j, r;
@@ -24,7 +46,9 @@ jQuery(function()
           k: r
         },
         function(data) {
-          jQuery('#event_result').html(data);
+          jQuery('#event_path').html(selectedNode.join(':'));
+          jQuery('#event_value').val(data);
+          selectedNodeValue = data;
         }
       );
 
@@ -33,7 +57,8 @@ jQuery(function()
     .jstree({
       core : {
         multiple: false
-      }
+      },
+      plugins: ["wholerow"]
     });
 
 
@@ -64,7 +89,8 @@ jQuery(function()
     .jstree({
       core : {
         multiple: false
-      }
+      },
+      plugins: ["wholerow"]
     
     });
     

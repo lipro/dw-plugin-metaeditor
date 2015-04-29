@@ -28,25 +28,8 @@ class admin_plugin_metaeditor_editor extends DokuWiki_Admin_Plugin {
 
     function handle() {
         if(!is_array($_REQUEST['d']) || !checkSecurityToken()) return;
-
-        //p_save_metadata($id, $meta);
         
     }
-    
-    /*
-    function recurseTree($var){
-      //$out = '<li>';
-      foreach($var as $k => $v){
-        if($k == 'id')
-          $out .= '<li>'.$v;
-        if(is_array($v)){
-          $out .= '<ul>'.$this->recurseTree($v).'</ul>';
-        }
-        $out .= '</li>';
-      }  
-      return $out; //.'</li>';
-    }
-    */
     
     function recurseTree($ns) {
         global $conf;
@@ -65,9 +48,15 @@ class admin_plugin_metaeditor_editor extends DokuWiki_Admin_Plugin {
         {
           if($item['type'] == 'f' || $item['type'] == 'd')
           {
-            $out .= '<li>'.$item['id'];
             if($item['type'] == 'd')
+            {
+              $out .= '<li>'.$item['id'];
               $out .= '<ul>'.$this->recurseTree(str_replace(':', '/', $item['id'])).'</ul>';
+            }
+            else
+            {
+              $out .= '<li data-jstree=\'{"icon":"'.DOKU_URL.'/lib/images/page.png"}\'>'.$item['id'];
+            }
             $out .= '</li>';
           }
         }
@@ -76,21 +65,16 @@ class admin_plugin_metaeditor_editor extends DokuWiki_Admin_Plugin {
 
     function html() {
 
-        //$cache = false;
-        //$id = 'start';
-        //$meta = p_read_metadata($id, $cache);
-
-        print_r($list);
         echo '<table>';
         echo '<tr>';
         echo '<td><div id="fileTree">';
         echo '<ul>'.$this->recurseTree('/').'</ul>';
         echo '</div></td>';
         echo '<td><div id="metaTree"></div></td>';
-        echo '<td><div id="event_result"></div></td>';
-        //echo '<ul>'.$this->recurseTree($meta).'</ul>';
-        //echo '</div>';
-        //print_r($meta);
+        echo '<td><div id="event_path"></div><br><div id="event_result">';
+        echo '<input type="text" id="event_value" value="..."><br>';
+        echo '<input type="submit" id="event_save" value="Save">';
+        echo '</div></td>';
     }
 
 }

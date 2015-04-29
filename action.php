@@ -45,6 +45,12 @@ class action_plugin_metaeditor extends DokuWiki_Action_Plugin {
       case 'getMetaValue':
         $data = $this->getMetaValueForPage($pageid, $key);
         break;
+      case 'setMetaValue':
+        $oldval = $key['oldval'];
+        $newval = $key['newval'];
+        $key = $key['key'];
+        $data = $this->setMetaValueForPage($pageid, $key, $oldval, $newval);
+        breka;
     
     }
     
@@ -67,6 +73,28 @@ class action_plugin_metaeditor extends DokuWiki_Action_Plugin {
     }
   }
   
+  function setMetaValueForPage($pageid, $key, $oldval, $newval)
+  {
+    $cache = false;
+    $meta = p_read_metadata($pageid, $cache);
+    $m = &$meta;
+    foreach($key as $k)
+      $m = &$m[$k];
+    if($m == $oldval)
+    {
+      $m = $newval;
+      if(p_save_metadata($pageid, $meta))
+        return "Successfully saved: $newval";
+      else
+        return "Error saving value: $newval";
+    }
+    else
+    {
+      return "Key has changed in the meantime, expected $oldval but got $m. Nothing was saved!";
+    }
+  
+  }
+  
   function parseMetaTree($meta)
   {
     $out = array();
@@ -78,6 +106,8 @@ class action_plugin_metaeditor extends DokuWiki_Action_Plugin {
       {
         $a['children'] = $this->parseMetaTree($v);
       }
+      else
+      $a['icon'] = DOKU_URL."/lib/images/page.png";
       $out[] = $a;
     }
     return $out;
