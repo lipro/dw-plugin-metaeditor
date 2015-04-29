@@ -2,6 +2,8 @@
 /**
  * DokuWiki Plugin metaeditor (Action Component)
  *
+ * Simple Meta Data Editor, heavily AJAX/jQuery based. 
+ *
  * @license GPL 2 http://www.gnu.org/licenses/gpl-2.0.html
  * @author  Andreas Böhler <dev@aboehler.at>
  */

@@ -2,6 +2,8 @@
 /**
  * DokuWiki Plugin metaeditor (Admin Component)
  *
+ * Simple Meta Data Editor, heavily AJAX/jQuery based.
+ *
  * @license GPL 2 http://www.gnu.org/licenses/gpl-2.0.html
  * @author  Andreas Gohr <gohr@cosmocode.de>
  */
@@ -64,8 +66,9 @@ class admin_plugin_metaeditor_editor extends DokuWiki_Admin_Plugin {
     }
 
     function html() {
-
+        echo '<h1>Meta Data Editor</h1>';
         echo '<table>';
+        echo '<tr><th width="30\%">Page</th><th width="30\%">Meta Data</th><th width="30\%">Value</th></tr>';
         echo '<tr>';
         echo '<td><div id="fileTree">';
         echo '<ul>'.$this->recurseTree('/').'</ul>';
