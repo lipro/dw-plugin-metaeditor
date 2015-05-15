@@ -76,13 +76,13 @@ jQuery(function()
                    key: selectedNodePath,
                    oldval: selectedNodeValue
                 }
-              }
+              };
               jqModalManager.msg = "Do you really want to delete the selected node?";
               jqModalManager.completeCb = function(data) {
                   jqModalManager.msg = data[1];
                   jqModalManager.showInfoDialog();
                   refreshMetaTree();              
-              }
+              };
               jqModalManager.showConfirmDialog();
             }
         },
@@ -106,13 +106,13 @@ jQuery(function()
                   key : nodePath,
                   newval: null
                 }
-              }
+              };
               jqModalManager.msg = "Create new folder";
               jqModalManager.completeCb = function(data) {
                 jqModalManager.msg = data[1];
                 jqModalManager.showInfoDialog();
                 refreshMetaTree();
-              }
+              };
               jqModalManager.createValue = false;
               jqModalManager.showCreateDialog();
             }
@@ -138,13 +138,13 @@ jQuery(function()
                   newkey: null,
                   newval: null
                 }
-              }
+              };
               jqModalManager.msg = "Create new item";
               jqModalManager.completeCb = function(data) {
                 jqModalManager.msg = data[1];
                 jqModalManager.showInfoDialog();
                 refreshMetaTree();
-              }
+              };
               jqModalManager.createValue = true;
               jqModalManager.showCreateDialog();
             }
