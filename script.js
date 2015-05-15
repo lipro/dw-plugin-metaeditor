@@ -379,5 +379,5 @@ var jqModalManager = {
     }
     
 
-}
+};
 
