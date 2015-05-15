@@ -11,7 +11,7 @@ jQuery(function()
     jqModalManager.init();
     
     jQuery('#event_save').click(function() {
-      var newVal = jQuery('#event_value').val()
+      var newVal = jQuery('#event_value').val();
       jQuery.post(
         DOKU_BASE + 'lib/exe/ajax.php',
         {
