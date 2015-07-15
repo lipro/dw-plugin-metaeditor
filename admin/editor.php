@@ -78,6 +78,7 @@ class admin_plugin_metaeditor_editor extends DokuWiki_Admin_Plugin {
         echo '<input type="text" id="event_value" value="..."><br>';
         echo '<input type="submit" id="event_save" value="Save">';
         echo '</div></td>';
+        echo '</tr></table>';
     }
 
 }
