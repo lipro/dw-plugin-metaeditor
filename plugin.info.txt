@@ -1,7 +1,7 @@
 base	metaeditor
 author  Andreas Boehler
 email   dev@aboehler.at
-date    2015-07-15
+date    2016-04-21
 name    Meta Data Editor
 desc    Edit metadata of pages
 url     http://www.dokuwiki.org/plugin:metaeditor
