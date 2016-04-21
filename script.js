@@ -77,7 +77,10 @@ jQuery(function()
                    oldval: selectedNodeValue
                 }
               };
-              jqModalManager.msg = "Do you really want to delete the selected node?";
+              jqModalManager.msg = "Do you really want to delete the selected node?<br>&nbsp;<br>";
+              jqModalManager.msg += "PageId: " + selectedPageId + "<br>";
+              jqModalManager.msg += "NodePath: " + selectedNodePath + "<br>";
+              jqModalManager.msg += "Value: " + selectedNodeValue;
               jqModalManager.completeCb = function(data) {
                   jqModalManager.msg = data[1];
                   jqModalManager.showInfoDialog();
@@ -107,7 +110,8 @@ jQuery(function()
                   newval: null
                 }
               };
-              jqModalManager.msg = "Create new folder";
+              jqModalManager.msg = "Create new folder<br>&nbsp;<br>";
+              jqModalManager.msg += "Parent: " + nodePath;
               jqModalManager.completeCb = function(data) {
                 jqModalManager.msg = data[1];
                 jqModalManager.showInfoDialog();
@@ -139,7 +143,8 @@ jQuery(function()
                   newval: null
                 }
               };
-              jqModalManager.msg = "Create new item";
+              jqModalManager.msg = "Create new item<br>&nbsp;<br>";
+              jqModalManager.msg += "Parent: " + nodePath;
               jqModalManager.completeCb = function(data) {
                 jqModalManager.msg = data[1];
                 jqModalManager.showInfoDialog();
@@ -288,6 +293,12 @@ var jqModalManager = {
        
        jQuery('#metaeditor__createInput').focus();
        
+       jQuery('#metaeditor__create').position({
+            my: "center",
+            at: "center",
+            of: window
+        });
+       
         // attach event handlers
         jQuery('#metaeditor__create .ui-dialog-titlebar-close').click(function(){
           jqModalManager.hideCreateDialog();
@@ -316,6 +327,12 @@ var jqModalManager = {
        .attr('id','metaeditor__info')
        .show()
        .appendTo('.dokuwiki:first');
+       
+       jQuery('#metaeditor__info').position({
+            my: "center",
+            at: "center",
+            of: window
+        });
        
            // attach event handlers
         jQuery('#metaeditor__info .ui-dialog-titlebar-close').click(function(){
@@ -353,6 +370,12 @@ var jqModalManager = {
        .attr('id','metaeditor__confirm')
        .show()
        .appendTo('.dokuwiki:first');
+       
+       jQuery('#metaeditor__confirm').position({
+            my: "center",
+            at: "center",
+            of: window
+        });
        
            // attach event handlers
         jQuery('#metaeditor__confirm .ui-dialog-titlebar-close').click(function(){
