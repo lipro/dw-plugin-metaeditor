@@ -37,6 +37,12 @@ class action_plugin_metaeditor extends DokuWiki_Action_Plugin {
     $data = array();
     $useJson = true;
     
+    if(!checkSecurityToken())
+    {
+        echo "CSRF Attack.";
+        return;
+    }
+    
     $perm = auth_quickaclcheck($pageid);
     if($perm == AUTH_ADMIN)
     {

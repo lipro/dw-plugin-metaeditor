@@ -7,6 +7,8 @@ jQuery(function()
     var selectedNode = null;
     var selectedNodePath = null;
     var selectedNodeValue = null;
+    var sectok = jQuery('#fileTree').data('sectok');
+    if(!sectok) return;
     
     jqModalManager.init();
     
@@ -18,6 +20,7 @@ jQuery(function()
           call: 'plugin_metaeditor',
           q: 'setMetaValue',
           r: selectedPageId,
+          sectok: sectok,
           opts: {
             key : selectedNode,
             oldval : selectedNodeValue,
@@ -39,7 +42,8 @@ jQuery(function()
           {
             call: 'plugin_metaeditor', 
             q: 'getMeta',
-            r: selectedPageId
+            r: selectedPageId,
+            sectok: sectok
           },
           function(data) {
             jQuery('#event_path').html('');
@@ -72,6 +76,7 @@ jQuery(function()
                 call : 'plugin_metaeditor',
                 q: 'deleteMetaValue',
                 r: selectedPageId,
+                sectok: sectok,
                 opts: {
                    key: selectedNodePath,
                    oldval: selectedNodeValue
@@ -105,6 +110,7 @@ jQuery(function()
                 call : 'plugin_metaeditor',
                 q: 'createMetaArray',
                 r: selectedPageId,
+                sectok: sectok,
                 opts: {
                   key : nodePath,
                   newval: null
@@ -137,6 +143,7 @@ jQuery(function()
                 call : 'plugin_metaeditor',
                 q: 'createMetaValue',
                 r: selectedPageId,
+                sectok: sectok,
                 opts: {
                   key : nodePath,
                   newkey: null,
@@ -177,6 +184,7 @@ jQuery(function()
           call: 'plugin_metaeditor', 
           q: 'getMetaValue',
           r: selectedPageId,
+          sectok: sectok,
           opts: {
             key: r
           }
@@ -213,6 +221,7 @@ jQuery(function()
         {
           call: 'plugin_metaeditor', 
           q: 'getMeta',
+          sectok: sectok,
           r: r
         },
         function(data) {

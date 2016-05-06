@@ -70,7 +70,7 @@ class admin_plugin_metaeditor_editor extends DokuWiki_Admin_Plugin {
         echo '<table>';
         echo '<tr><th width="30\%">Page</th><th width="30\%">Meta Data</th><th width="30\%">Value</th></tr>';
         echo '<tr>';
-        echo '<td><div id="fileTree">';
+        echo '<td><div id="fileTree" data-sectok="'.getSecurityToken().'">';
         echo '<ul>'.$this->recurseTree('/').'</ul>';
         echo '</div></td>';
         echo '<td><div id="metaTree"></div></td>';
