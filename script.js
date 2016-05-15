@@ -263,6 +263,13 @@ var jqModalManager = {
        .dialog({
            autoOpen: false,
            draggable: true,
+           // fix for dragging: http://stackoverflow.com/questions/17247486/jquery-ui-dialog-dragging-issues
+           drag: function(event, ui) {
+               var fixPix = jQuery(document).scrollTop();
+               iObj = ui.position;
+               iObj.top = iObj.top - fixPix;
+               jQuery(this).closest(".ui-dialog").css("top", iObj.top + "px");
+           },
            title: "Create",
            resizable: true,
            buttons: {
@@ -321,6 +328,13 @@ var jqModalManager = {
        .dialog({
            autoOpen: false,
            draggable: true,
+           // fix for dragging: http://stackoverflow.com/questions/17247486/jquery-ui-dialog-dragging-issues
+           drag: function(event, ui) {
+               var fixPix = jQuery(document).scrollTop();
+               iObj = ui.position;
+               iObj.top = iObj.top - fixPix;
+               jQuery(this).closest(".ui-dialog").css("top", iObj.top + "px");
+           },
            title: "Info",
            resizable: true,         
            buttons: {
@@ -354,6 +368,13 @@ var jqModalManager = {
        .dialog({
            autoOpen: false,
            draggable: true,
+           // fix for dragging: http://stackoverflow.com/questions/17247486/jquery-ui-dialog-dragging-issues
+           drag: function(event, ui) {
+               var fixPix = jQuery(document).scrollTop();
+               iObj = ui.position;
+               iObj.top = iObj.top - fixPix;
+               jQuery(this).closest(".ui-dialog").css("top", iObj.top + "px");
+           },
            title: "Confirmation",
            resizable: true,
            buttons: {
